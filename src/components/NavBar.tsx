@@ -16,7 +16,7 @@ export default function NavBar() {
       <div className="flex items-center gap-4">
         <SearchBar />
         <button className="rounded-full bg-gray-100 p-2">
-          <span className="material-icons">account_circle</span>
+          <span className="material-icons">aaa</span>
         </button>
       </div>
     </nav>

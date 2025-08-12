@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { setServices } from "../store/servicesSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchStart, fetchFail, appendServices, selectServices } from "../store/servicesSlice";
 import { Service } from "../types/service";
 import { createClient } from "@supabase/supabase-js";
 
@@ -14,15 +14,25 @@ const supabase = createClient(
 
 export function useFetchServices() {
   const dispatch = useDispatch();
+  const existing = useSelector(selectServices);
 
   useEffect(() => {
+    // Avoid refetch if we already have data
+    if (existing.length > 0) return;
+
+    let cancelled = false;
     const fetchServices = async () => {
+      dispatch(fetchStart());
       const { data, error } = await supabase.from("services").select("*");
       if (error) {
+        if (!cancelled) dispatch(fetchFail(error.message));
         console.error("Error fetching services:", error);
         return;
       }
-
+      if (!data) {
+        if (!cancelled) dispatch(fetchFail("No data"));
+        return;
+      }
       const formattedData: Service[] = data.map(item => ({
         id: item.id,
         title: item.title,
@@ -44,7 +54,7 @@ export function useFetchServices() {
           item.offering_first_share_cert && "First Share Certificate",
           item.offering_ctc_delivery && "CTC Delivery",
           item.offering_chat_support && "Chat Support",
-        ].filter(Boolean),
+        ].filter(Boolean) as string[],
         benefits: [
           "Manage your company from one central dashboard",
           "Securely store corporate Files & Documents",
@@ -55,7 +65,9 @@ export function useFetchServices() {
           name: item.secretary_name,
           certifications: Array.isArray(item.certifications)
             ? item.certifications
-            : JSON.parse(item.certifications.replace(/'/g, '"')),
+            : item.certifications
+              ? JSON.parse(item.certifications.replace(/'/g, '"'))
+              : [],
           avatar: item.secretary_avatar_url,
           firm: item.firm_name,
           verified: !!item.secretary_verified,
@@ -69,9 +81,13 @@ export function useFetchServices() {
             : [],
       }));
 
-      dispatch(setServices(formattedData)); // Ensure this only runs when data changes
+      if (!cancelled) {
+        // Treat this as first page append
+        dispatch(appendServices({ page: 0, services: formattedData, hasMore: false }));
+      }
     };
 
     fetchServices();
-  }, [dispatch]);
+    return () => { cancelled = true; };
+  }, [dispatch, existing.length]);
 }
