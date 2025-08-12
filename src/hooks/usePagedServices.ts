@@ -1,8 +1,16 @@
 "use client";
-import { useCallback, useEffect, useRef } from 'react';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchStart, fetchFail, appendServices } from '../store/servicesSlice';
+import { useCallback, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import {
+  fetchStart,
+  fetchFail,
+  storePage,
+  setCurrentPage,
+  selectCurrentServices,
+  selectPaginationMeta,
+  selectServicesState
+} from '../store/servicesSlice';
 import type { Service } from '../types/service';
 
 const supabase = createClient(
@@ -10,19 +18,17 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-const PAGE_SIZE = 24;
-
-export function usePaginatedServices() {
+export function usePagedServices() {
   const dispatch = useAppDispatch();
-  const { page, hasMore, loading } = useAppSelector(s => s.services);
-  const inFlight = useRef(false);
+  const servicesState = useAppSelector(selectServicesState);
+  const services = useAppSelector(selectCurrentServices);
+  const { currentPage, pageSize, pageCount, total, loading } = useAppSelector(selectPaginationMeta);
 
-  const loadPage = useCallback(async (nextPage: number) => {
-    if (inFlight.current || loading || !hasMore) return;
-    inFlight.current = true;
+  const fetchPage = useCallback(async (page: number) => {
+    if (servicesState.pages[page]) return; // cached
     dispatch(fetchStart());
-    const from = nextPage * PAGE_SIZE;
-    const to = from + PAGE_SIZE - 1;
+    const from = page * pageSize;
+    const to = from + pageSize - 1;
 
     const { data, error, count } = await supabase
       .from('services')
@@ -31,7 +37,6 @@ export function usePaginatedServices() {
 
     if (error) {
       dispatch(fetchFail(error.message));
-      inFlight.current = false;
       return;
     }
 
@@ -79,16 +84,25 @@ export function usePaginatedServices() {
         : []
     }));
 
-    const total = count ?? mapped.length;
-    const hasMoreNext = to + 1 < total;
+    dispatch(storePage({ page, services: mapped, total: count ?? mapped.length }));
+  }, [dispatch, pageSize, servicesState.pages]);
 
-    dispatch(appendServices({ page: nextPage, services: mapped, hasMore: hasMoreNext }));
-    inFlight.current = false;
-  }, [dispatch, hasMore, loading]);
-
+  // Load current page if not cached
   useEffect(() => {
-    if (page === 0 && !loading) loadPage(0);
-  }, [page, loadPage, loading]);
+    void fetchPage(currentPage);
+  }, [currentPage, fetchPage]);
 
-  return { loadNext: () => loadPage(page + 1) };
+  const goToPage = useCallback((p: number) => {
+    dispatch(setCurrentPage(p));
+  }, [dispatch]);
+
+  return {
+    services,
+    currentPage,
+    pageSize,
+    pageCount,
+    total,
+    loading,
+    goToPage
+  };
 }

@@ -1,35 +1,21 @@
 "use client";
-import { useEffect, useRef, useCallback, useMemo } from 'react';
-import { useAppSelector } from '../store/hooks';
-import { usePaginatedServices } from '../hooks/usePaginatedServices';
 import ServiceCard from './ServiceCard';
-import NavBar from './NavBar';
 import Footer from './Footer';
 import SearchBar from './SearchBar';
+import PaginationControls from './PaginationControls';
+import { usePagedServices } from '../hooks/usePagedServices';
 
 export default function ServicePage() {
-  const { items, hasMore, loading } = useAppSelector(s => s.services);
-  const { loadNext } = usePaginatedServices();
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
-
-  // Memoize array reference (no transformation now, but pattern holds)
-  const services = useMemo(() => items, [items]);
-
-  const onIntersect = useCallback((entries: IntersectionObserverEntry[]) => {
-    const entry = entries[0];
-    if (entry.isIntersecting && hasMore && !loading) loadNext();
-  }, [hasMore, loading, loadNext]);
-
-  useEffect(() => {
-    if (!sentinelRef.current) return;
-    const obs = new IntersectionObserver(onIntersect, { rootMargin: '600px 0px' });
-    obs.observe(sentinelRef.current);
-    return () => obs.disconnect();
-  }, [onIntersect]);
+  const {
+    services,
+    currentPage,
+    pageCount,
+    loading,
+    goToPage
+  } = usePagedServices();
 
   return (
     <div className="min-h-screen flex flex-col">
-      <NavBar />
       <main className="container mx-auto flex-1 py-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <div>
@@ -43,16 +29,25 @@ export default function ServicePage() {
           </div>
         </div>
 
+        {loading && services.length === 0 && (
+          <div className="py-12 text-center text-sm text-neutral-500">Loading…</div>
+        )}
+
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {services.map(s => (
             <ServiceCard key={s.id} service={s} />
           ))}
         </div>
 
-        <div ref={sentinelRef} className="py-8 flex justify-center">
-          {loading && <span className="text-sm text-neutral-500">Loading…</span>}
-          {!hasMore && !loading && <span className="text-sm text-neutral-400">End of results</span>}
-        </div>
+        <PaginationControls
+          page={currentPage + 1}
+          count={pageCount}
+          onChange={(_, value) => goToPage(value - 1)}
+        />
+
+        {loading && services.length > 0 && (
+          <div className="mt-4 text-center text-xs text-neutral-400">Loading page…</div>
+        )}
       </main>
       <Footer />
     </div>

@@ -1,5 +1,6 @@
 "use client";
 import React, { memo, useRef, useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import type { Service } from '../types/service';
 
@@ -15,7 +16,6 @@ const ServiceCard = memo(function ServiceCard({ service }: Props) {
     if (!hasBeenSeenRef.current) {
       hasBeenSeenRef.current = true;
       seenMap.add(service.id);
-      // minimal stagger can be added here if desired
       requestAnimationFrame(() => setReady(true));
     }
   }, []);
@@ -23,24 +23,29 @@ const ServiceCard = memo(function ServiceCard({ service }: Props) {
   const href = `/services/${encodeURIComponent(service.id)}`;
 
   return (
-    <Link href={href} prefetch={false} className="block focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg">
+    <Link
+      href={href}
+      prefetch={false}
+      className="block focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
+    >
       <article
         className={
-          "rounded-lg bg-white overflow-hidden shadow-sm transition-colors cursor-pointer " +
+          "rounded-lg bg-white overflow-hidden shadow-sm cursor-pointer " +
+          "transition-transform duration-150 ease-out will-change-transform " + // transition
+          "hover:shadow-md hover:scale-[1.03] " + // hover effect
           (ready ? "opacity-100" : "opacity-0")
         }
-        style={{ willChange: 'auto' }}
       >
-        <div className="relative w-full h-48 bg-neutral-100">
-          <img
+        <motion.div className="relative w-full h-48 bg-neutral-100" layoutId={`service-image-${service.id}`}>
+          <motion.img
             src={service.image}
             alt={service.title}
-              // Reserve space; object-cover avoids layout jump
             className="w-full h-full object-cover"
             loading="lazy"
             decoding="async"
+            layoutId={`service-img-tag-${service.id}`}
           />
-        </div>
+        </motion.div>
         <div className="p-4">
           <div className="flex items-center gap-2 mb-2">
             <img
@@ -49,11 +54,10 @@ const ServiceCard = memo(function ServiceCard({ service }: Props) {
               width={32}
               height={32}
               className="w-8 h-8 rounded-full object-cover bg-neutral-200"
-              loading="lazy"
-              decoding="async"
             />
             <span className="font-semibold text-neutral-900 truncate">{service.secretary.name}</span>
             <span className="ml-auto text-xs text-neutral-500">{service.rating.toFixed(1)}★</span>
+            
           </div>
           <h2 className="font-bold text-neutral-900 text-sm line-clamp-2">{service.title}</h2>
           <p className="text-neutral-500 text-xs line-clamp-2">{service.subtitle}</p>
@@ -62,6 +66,6 @@ const ServiceCard = memo(function ServiceCard({ service }: Props) {
       </article>
     </Link>
   );
-}, (prev, next) => prev.service === next.service); // reference equality check (stable due to slice logic)
+}, (prev, next) => prev.service === next.service);
 
 export default ServiceCard;

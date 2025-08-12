@@ -1,58 +1,71 @@
-// store/servicesSlice.js
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { Service } from '../types/service';
-import { createSelector } from '@reduxjs/toolkit';
 import type { RootState } from '.';
+import type { Service } from '../types/service';
 
 interface ServicesState {
-  items: Service[];          // Master list (stable object references)
-  idMap: Record<string, true>; // Serializable dedupe map instead of Set
-  page: number;
-  hasMore: boolean;
+  pages: Record<number, Service[]>;   // cached pages
+  currentPage: number;                // 0-based
+  pageSize: number;
+  total: number | null;               // total rows
   loading: boolean;
   error?: string;
 }
 
 const initialState: ServicesState = {
-  items: [],
-  idMap: {},
-  page: 0,
-  hasMore: true,
-  loading: false
+  pages: {},
+  currentPage: 0,
+  pageSize: 24,
+  total: null,
+  loading: false,
+  error: undefined
 };
 
 export const servicesSlice = createSlice({
   name: 'services',
   initialState,
   reducers: {
-    fetchStart(state) { state.loading = true; },
-    fetchFail(state, action: PayloadAction<string>) {
-      state.loading = false; state.error = action.payload;
+    fetchStart(state) {
+      state.loading = true;
+      state.error = undefined;
     },
-    appendServices(state, action: PayloadAction<{ page: number; services: Service[]; hasMore: boolean }>) {
-      const { services, page, hasMore } = action.payload;
-      // Only push NEW references to avoid reshaping existing indices
-      for (const s of services) {
-        if (!state.idMap[s.id]) {
-          state.items.push(s);
-          state.idMap[s.id] = true;
-        }
-      }
-      state.page = page;
-      state.hasMore = hasMore;
+    fetchFail(state, action: PayloadAction<string>) {
       state.loading = false;
+      state.error = action.payload;
+    },
+    storePage(
+      state,
+      action: PayloadAction<{ page: number; services: Service[]; total: number }>
+    ) {
+      const { page, services, total } = action.payload;
+      state.pages[page] = services;      // cache page
+      state.total = total;
+      state.loading = false;
+    },
+    setCurrentPage(state, action: PayloadAction<number>) {
+      state.currentPage = action.payload;
+    },
+    resetServices(state) {
+      state.pages = {};
+      state.currentPage = 0;
+      state.total = null;
+      state.loading = false;
+      state.error = undefined;
     }
   }
 });
 
-export const { fetchStart, fetchFail, appendServices } = servicesSlice.actions;
-
+export const { fetchStart, fetchFail, storePage, setCurrentPage, resetServices } = servicesSlice.actions;
 export default servicesSlice.reducer;
 
-export const selectServices = (state: RootState) => state.services.items;
-
-// Example filtered (if needed) – stable output unless items actually change
-export const selectServicesStable = createSelector(
-  [selectServices],
-  items => items
-);
+// Selectors
+export const selectServicesState = (s: RootState) => s.services;
+export const selectCurrentServices = (s: RootState) => {
+  const { pages, currentPage } = s.services;
+  return pages[currentPage] ?? [];
+};
+export const selectPaginationMeta = (s: RootState) => {
+  const { currentPage, pageSize, total, loading, error, pages } = s.services;
+  const pageCount =
+    total != null ? Math.max(1, Math.ceil(total / pageSize)) : Object.keys(pages).length || 1;
+  return { currentPage, pageSize, total, pageCount, loading, error };
+};

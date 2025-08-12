@@ -10,7 +10,7 @@ interface Props {
 
 export default function ServiceDetail({ service }: Props) {
   return (
-    <div className="flex flex-col lg:flex-row gap-8">
+    <motion.div className="flex flex-col lg:flex-row gap-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       {/* Left Side */}
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
@@ -20,11 +20,17 @@ export default function ServiceDetail({ service }: Props) {
       >
         <h2 className="text-2xl font-bold text-[#222222] mb-2">{service.title}</h2>
         <div className="flex gap-3 mb-4">
-          <img
-            src={service.image}
-            alt={service.title}
-            className="rounded-lg w-[350px] h-[200px] object-cover"
-          />
+          {/* Wrap the hero image area with matching layoutIds */}
+          <motion.div layoutId={`service-image-${service.id}`} className="w-full h-72 md:h-96 overflow-hidden rounded-lg bg-neutral-100">
+            <motion.img
+              layoutId={`service-img-tag-${service.id}`}
+              src={service.image}
+              alt={service.title}
+              className="w-full h-full object-cover"
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            />
+          </motion.div>
+
           {service.image_secondary_urls?.map((url, idx) => (
             <img key={idx} src={url} alt={`secondary-${idx}`} className="rounded-lg w-[100px] h-[100px] object-cover" />
           ))}
@@ -109,6 +115,6 @@ export default function ServiceDetail({ service }: Props) {
           How Anycomp Works
         </Button>
       </motion.div>
-    </div>
+  </motion.div>
   );
 }
