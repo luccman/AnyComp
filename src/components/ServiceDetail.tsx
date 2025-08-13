@@ -5,14 +5,15 @@ import { Service } from '../types/service';
 import Button from '@mui/material/Button';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import CheckIcon from '@mui/icons-material/Check';
-import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import FlashOnIcon from '@mui/icons-material/FlashOn';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import CertificateIcon from '@mui/icons-material/WorkspacePremium';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import HeadsetMicIcon from '@mui/icons-material/HeadsetMic';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 interface Props {
   service: Service;
@@ -32,7 +33,7 @@ const offeringDetails = [
   {
     title: "Company Secretary Subscription",
     description: "Enjoy 1 month free Company Secretary Subscription",
-    Icon: BusinessCenterIcon
+    Icon: PersonAddAltIcon
   },
   {
     title: "Opening of a Bank Account",
@@ -42,12 +43,12 @@ const offeringDetails = [
   {
     title: "Priority Filling",
     description: "Documents are prioritized for submission and swift processing within 24 hours",
-    Icon: FlashOnIcon
+    Icon: ElectricBoltIcon
   },
   {
     title: "Registered Office Address Use",
     description: "Use of SSM-Compliant Registered Office Address with Optional Mail Forwarding",
-    Icon: LocationOnIcon
+    Icon: PlaceOutlinedIcon
   },
   {
     title: "Compliance Calendar Setup",
@@ -91,7 +92,7 @@ export default function ServiceDetail({ service }: Props) {
         // This timeout should match your transition duration
         setTimeout(() => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 700);
+        }, 500);
       }
       
       // Clear storage
@@ -159,7 +160,7 @@ export default function ServiceDetail({ service }: Props) {
         </div>
         {/* Description */}
         <motion.p
-          className="text-3xl mb-4 font-semibold text-[#222222]"
+          className="text-2xl mb-4 font-semibold text-[#222222]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: FADE_DURATION, delay: DESCRIPTION_DELAY }}
@@ -167,13 +168,20 @@ export default function ServiceDetail({ service }: Props) {
           Description
         </motion.p>
         <motion.p
-          className="text-gray-600 mb-4"
+          className="text-gray-600 mb-6 text-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: FADE_DURATION, delay: DESCRIPTION_DELAY }}
         >
-          {service.description}
+        From idea to SSM-approved - we register your company with ease. No paperwork hassle, just fast, compliant peace of mind guaranteed. Your trusted Company Secretary in Malaysia, ready to serve, Start your business strong-with expert care you deserve.
         </motion.p>
+        {/* Animated gray line above Additional Offerings */}
+<motion.hr
+  initial={{ opacity: 0, scaleX: 0.8 }}
+  animate={{ opacity: 1, scaleX: 1 }}
+  transition={{ duration: 0.7, delay: OFFERINGS_DELAY }}
+  className="w-full border-t-2 border-gray-300 my-8 rounded"
+/>
         {/* Additional Offerings */}
         <motion.div
           className="mb-4"
@@ -181,17 +189,17 @@ export default function ServiceDetail({ service }: Props) {
           animate={{ opacity: 1 }}
           transition={{ duration: FADE_DURATION, delay: OFFERINGS_DELAY }}
         >
-          <h3 className="font-semibold text-[#222222] mb-4 text-3xl pt-4">Additional Offerings</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-9 text-gray-700">
+          <h3 className="font-semibold text-[#222222] mb-4 text-2xl pt-4">Additional Offerings</h3>
+          <div className="grid  md:grid-cols-2 gap-5 text-gray-700 pb-5">
             {service.offerings.map((offering, idx) => {
               const details = offeringDetails.find(d => d.title === offering);
               if (!details) return null;
               const Icon = details.Icon;
               return (
-                <div key={idx} className="flex items-start gap-3">
-                  <Icon sx={{ fontSize: 24, color: '#000000ff' }} />
+                <div key={idx} className="flex items-center gap-3">
+                  <Icon sx={{ fontSize: 28, color: '#000000ff' }} />
                   <div>
-                    <strong className="text-[#222222]">{details.title}</strong>
+                    <strong className="text-[#222222] text-md">{details.title}</strong>
                     <div className="text-gray-500 text-sm">{details.description}</div>
                   </div>
                 </div>
@@ -199,60 +207,91 @@ export default function ServiceDetail({ service }: Props) {
             })}
           </div>
         </motion.div>
-        {/* Company Secretary */}
+        {/* Animated gray line above Company Secretary section */}
+<motion.hr
+  initial={{ opacity: 0, scaleX: 0.8 }}
+  animate={{ opacity: 1, scaleX: 1 }}
+  transition={{ duration: 0.7, delay: SECRETARY_DELAY }}
+  className="w-full border-t-2 border-gray-300 my-8 rounded"
+  />
+        {/* Company Secretary Section */}
         <motion.div
-          className="mb-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: SECRETARY_DELAY }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: FADE_DURATION, delay: SECRETARY_DELAY }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8"
         >
-          <h3 className="font-semibold text-[#222222] mb-2 text-3xl">Company Secretary</h3>
-          <div className="flex items-center gap-3">
-            <img
-              src={service.secretary.avatar}
-              alt={service.secretary.name}
-              className="w-12 h-12 rounded-full"
-            />
-            <div>
-              <div className="text-gray-800">
-                {service.secretary.name} {service.secretary.verified && <span>✅verified</span>}
+          {/* Left: Secretary profile and info */}
+          <div>
+            <h3 className="font-semibold text-[#222222] mb-3 text-2xl">Company Secretary</h3>
+            <div className="flex items-center gap-3 mb-2">
+              <img
+                src={service.secretary.avatar}
+                alt={service.secretary.name}
+                className="w-14 h-14 rounded-full"
+              />
+              <div>
+                <div className="text-lg font-semibold text-[#222222] flex items-center gap-2">
+                  {service.secretary.name}
+                  {service.secretary.verified && (
+                    <><VerifiedIcon sx={{ color: 'green', fontSize: 20 }} /><span className="text-green-600 font-medium text-xs">Verified</span></>
+                  )}
+                </div>
+                <div className="text-gray-700">{service.secretary.firm}</div>
+                <div className="text-gray-500">{service.review_count} Clients &nbsp; <span>⭐{service.rating}</span></div>
               </div>
-              <div className="text-gray-600">{service.secretary.firm}</div>
-              <div className="text-gray-500">{service.review_count} Clients ⭐{service.rating}</div>
+              <button className="ml-auto bg-blue-900 text-white px-4 py-2 rounded font-semibold text-sm">Message</button>
             </div>
+            <p className="text-gray-600 mt-4 text-sm">
+              A company secretarial service founded by {service.secretary.name}, who believes that every company deserves clarity, confidence, and care in their compliance journey, Inspired by the spirit of entrepreneurship, {service.secretary.name} treats every client's business as if it were her own-attentive to detail, committed to deadlines, and focused on growth. Step into a partnership built on trust, transparency, and professional excellence. Whether you're just starting out or managing a growing company, {service.secretary.name} is here to make your corporate governance smooth, secure, and stress-free. Your company's peace of mind starts here
+            </p>
           </div>
-        </motion.div>
-        {/* Firm */}
-        <motion.div
-          className="mb-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: FADE_DURATION, delay: FIRM_DELAY }}
-        >
-          <strong className="text-[#222222]">Firm</strong>
-          <div className="flex items-center gap-2">
-            <img
-              src={service.firm_logo_url}
-              alt={service.secretary.firm}
-              className="w-8 h-8"
-            />
-            <div className="text-gray-800">
-              {service.secretary.firm}{' '}
-              <span className="text-gray-500">{service.firm_years_experience} Years providing Company Services</span>
+          {/* Right: Secretary is part of a firm, firm info, certifications */}
+          <div>
+            <div className="mb-4">
+              <div className="font-semibold text-lg text-[#222222]">{service.secretary.name} is part of a firm</div>
+              <div className="text-gray-600 mt-1 text-sm">
+                Company Secretary firms are professional service providers that manage corporate compliance, company registration, and statutory obligations on behalf of businesses
+              </div>
             </div>
-          </div>
-        </motion.div>
-        {/* Certifications */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: FADE_DURATION, delay: CERTIFICATIONS_DELAY }}
-        >
-          <strong className="text-[#222222]">Certifications</strong>
-          <div className="flex gap-2 text-gray-700">
-            {service.secretary.certifications.map((cert, idx) => (
-              <span key={idx}>{cert}</span>
-            ))}
+            <div className="mb-4">
+              <strong className="text-[#222222] text-lg">Firm</strong>
+              <div className="flex items-center gap-2 mt-2">
+              <img
+                src={service.firm_logo_url}
+                alt={service.secretary.firm}
+                className="w-8 h-8"
+              />
+              <div>
+                <div className="text-gray-800 font-semibold">{service.secretary.firm}</div>
+                <div className="text-gray-500 text-sm">{service.firm_years_experience} Years providing Company Secretarial services</div>
+              </div>
+              </div>
+            </div>
+            <div>
+              <strong className="text-[#222222] text-lg">Certifications</strong>
+              <div className="flex gap-2 ">
+                {service.secretary.certifications.map((cert, idx) => {
+                  let logoSrc = '';
+                  if (cert === 'Licensed Company Secretary') {
+                    logoSrc = '/pics/ssm.png';
+                  } else if (cert === 'Chartered Secretary') {
+                    logoSrc = '/pics/maicsa.jpeg';
+                  }
+                  return (
+                    <span key={idx} className="inline-block flex items-center gap-3">
+                      {logoSrc && (
+                        <img
+                          src={logoSrc}
+                          alt={cert}
+                          className="w-30 h-17 object-contain"
+                        />
+                      )}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </motion.div>
       </motion.div>
@@ -281,17 +320,36 @@ export default function ServiceDetail({ service }: Props) {
         </ul>
         <Button
           variant="contained"
-          color="primary"
           fullWidth
-          sx={{ fontWeight: 'bold', fontSize: '1rem', py: 1.5, borderRadius: 2 }}
+          sx={{
+            fontFamily: "'Red Hat Display', sans-serif",
+            fontWeight: 'bold',
+            fontSize: '1rem',
+            py: 1.5,
+            borderRadius: 1,
+            backgroundColor: '#0a1a4f',
+            color: '#fff',
+            '&:hover': {
+              backgroundColor: '#08153d',
+            },
+          }}
         >
-          Appoint Company Secretary
+          Appoint Company Secretary →
         </Button>
         <Button
-          variant="outlined"
-          color="primary"
+          variant="contained"
           fullWidth
-          sx={{ mt: 2, fontWeight: 'bold', fontSize: '1rem', py: 1.5, borderRadius: 2 }}
+          sx={{
+            fontFamily: "'Red Hat Display', sans-serif",
+            mt: 2,
+            fontWeight: 'bold',
+            fontSize: '1rem',
+            py: 1.5,
+            borderRadius: 1,
+            borderColor: '#222',
+            color: '#fff',
+            backgroundColor: '#222',
+          }}
         >
           How Anycomp Works
         </Button>

@@ -60,10 +60,10 @@ export default servicesSlice.reducer;
 
 // Selectors
 export const selectServicesState = (s: RootState) => s.services;
-export const selectCurrentServices = (s: RootState) => {
-  const { pages, currentPage } = s.services;
-  return pages[currentPage] ?? [];
-};
+export const selectCurrentServices = createSelector(
+  [(s: RootState) => s.services.pages, (s: RootState) => s.services.currentPage],
+  (pages, currentPage) => pages[currentPage] ?? []
+);
 export const selectPaginationMeta = createSelector(
   [(s: RootState) => s.services],
   ({ currentPage, pageSize, total, loading, error, pages }) => ({

@@ -56,7 +56,7 @@ const ServiceCard = memo(function ServiceCard({ service }: Props) {
             style={{ zIndex: 101 }}
             initial={{ opacity: isActiveLayoutId ? 0 : 1 }}
             animate={{ opacity: imgLoaded || isActiveLayoutId ? 1 : 0 }}
-            transition={{ duration: isActiveLayoutId ? 0 : 1 }}
+            transition={{ duration: isActiveLayoutId ? 0 : 0.7 }}
             onLoad={() => setImgLoaded(true)}
           />
         </motion.div>
