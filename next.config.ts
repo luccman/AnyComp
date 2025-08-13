@@ -1,8 +1,8 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  output: 'export',
-  basePath: '/AnyComp',
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: "export",
+  basePath: "/AnyComp",
+  // ...other config options
 };
 
-export default nextConfig;
+module.exports = nextConfig;
