@@ -6,8 +6,14 @@ import React from 'react';
 import type { Variants } from 'framer-motion';
 
 const pageVariants: Variants = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } },
+  animate: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { 
+      duration: 1, // <-- This is the transition time in seconds
+      ease: [0.8, 1, 0.3, 1] 
+    } 
+  },
 };
 
 interface Props { children: React.ReactNode; }
@@ -15,7 +21,7 @@ interface Props { children: React.ReactNode; }
 export default function RouteTransitionProvider({ children }: Props) {
   const pathname = usePathname();
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    <AnimatePresence mode="wait" initial={true}>
       <motion.div
         key={pathname}
         variants={pageVariants}

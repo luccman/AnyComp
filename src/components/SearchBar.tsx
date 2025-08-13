@@ -1,21 +1,25 @@
 "use client";
-import { useState } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
 
-export default function SearchBar({ onSearch }: { onSearch?: (query: string) => void }) {
-  const [query, setQuery] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-    if (onSearch) onSearch(e.target.value);
-  };
+export default function SearchBar() {
+ 
 
   return (
-    <input
-      type="text"
-      value={query}
-      onChange={handleChange}
-      placeholder="Search for any services"
-      className="border border-gray-300 rounded px-3 py-2 w-50 h-9 text-xs focus:outline-none focus:ring focus:border-blue-300"
-    />
+    <div className="flex items-center">
+      <input
+        type="text"
+
+        placeholder="Search for any services"
+        className="border border-gray-300 rounded-l px-3 py-2 w-50 h-9 text-xs focus:outline-none focus:ring focus:border-blue-300"
+      />
+      <button
+        className="bg-blue-900 hover:bg-blue-500 text-white rounded-r flex items-center justify-center px-2 h-9"
+        style={{ minWidth: '32px' }}
+        aria-label="Search"
+      >
+        <SearchIcon fontSize="small" />
+      </button>
+    </div>
   );
 }

@@ -54,12 +54,12 @@ export function usePagedServices() {
       location: item.location ?? '',
       offerings: [
         item.offering_company_secretary_subscription && "Company Secretary Subscription",
-        item.offering_bank_account_opening && "Bank Account Opening",
-        item.offering_priority_filing && "Priority Filing",
-        item.offering_registered_office && "Registered Office",
-        item.offering_compliance_calendar && "Compliance Calendar",
-        item.offering_first_share_cert && "First Share Certificate",
-        item.offering_ctc_delivery && "CTC Delivery",
+        item.offering_bank_account_opening && "Opening of a Bank Account",
+        item.offering_priority_filing && "Priority Filling",
+        item.offering_registered_office && "Registered Office Address Use",
+        item.offering_compliance_calendar && "Compliance Calendar Setup",
+        item.offering_first_share_cert && "First Share Certificate Issued Free",
+        item.offering_ctc_delivery && "CTC Delivery & Courier Handling",
         item.offering_chat_support && "Chat Support",
       ].filter(Boolean) as string[],
       benefits: [

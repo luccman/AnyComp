@@ -1,12 +1,8 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import { Providers } from '@/store/Providers';
 import NavBar from '../components/NavBar';
-import RouteTransitionProvider from '../components/RouteTransitionProvider';
-
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
-const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
+import RouteTransitionProvider from './RouteTransitionProvider';
 
 export const metadata: Metadata = {
   title: 'ANYCOMP',
@@ -16,7 +12,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet" />
+      </head>
+      <body className="font-lexend antialiased">
         <Providers>
           <NavBar />
           <RouteTransitionProvider>

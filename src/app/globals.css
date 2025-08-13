@@ -1,22 +1,6 @@
 @import "tailwindcss";
 
-/* Proxima Nova itself is paid and licensed by Adobe, so there’s no legal free download.
 
-Here is the closest free Proxima Nova alternatives:
-
-Metropolis – Best overall match*/
-@font-face {
-  font-family: 'Metropolis';
-  src: url('/fonts/Metropolis/Metropolis-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Red Hat Display';
-  src: url('/fonts/RedHatDisplayFont/RedHatDisplay-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+.font-lexend {
+  font-family: 'Lexend', 'Red Hat Display', sans-serif;
 }

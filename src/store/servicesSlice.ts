@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector } from '@reduxjs/toolkit';
 import type { RootState } from '.';
 import type { Service } from '../types/service';
 
@@ -63,9 +64,15 @@ export const selectCurrentServices = (s: RootState) => {
   const { pages, currentPage } = s.services;
   return pages[currentPage] ?? [];
 };
-export const selectPaginationMeta = (s: RootState) => {
-  const { currentPage, pageSize, total, loading, error, pages } = s.services;
-  const pageCount =
-    total != null ? Math.max(1, Math.ceil(total / pageSize)) : Object.keys(pages).length || 1;
-  return { currentPage, pageSize, total, pageCount, loading, error };
-};
+export const selectPaginationMeta = createSelector(
+  [(s: RootState) => s.services],
+  ({ currentPage, pageSize, total, loading, error, pages }) => ({
+    currentPage,
+    pageSize,
+    total,
+    pageCount:
+      total != null ? Math.max(1, Math.ceil(total / pageSize)) : Object.keys(pages).length || 1,
+    loading,
+    error,
+  })
+);
