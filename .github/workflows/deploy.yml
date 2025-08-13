@@ -8,6 +8,9 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Node.js
@@ -17,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build static site
-        run: npm run build && npm run export
+        run: npm run build
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:

@@ -3,8 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 
 export async function generateStaticParams() {
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!
   );
   const { data } = await supabase.from("services").select("id");
   return (data ?? []).map((service: { id: string }) => ({
@@ -15,8 +15,8 @@ export async function generateStaticParams() {
 export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!
   );
   const { data: service } = await supabase
     .from("services")
