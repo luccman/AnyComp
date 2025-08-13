@@ -1,23 +1,30 @@
-"use client";
 import ServiceDetail from '../../../components/ServiceDetail';
-import { usePagedServices } from '../../../hooks/usePagedServices';
-import { useParams } from 'next/navigation';
+import { createClient } from '@supabase/supabase-js';
 
-export default function ServiceDetailPage() {
-  const { id } = useParams(); // Get the service ID from the URL
-  const { services, loading } = usePagedServices(); // Fetch services using the hook
+export async function generateStaticParams() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  const { data } = await supabase.from("services").select("id");
+  return (data ?? []).map((service: { id: string }) => ({
+    id: service.id,
+  }));
+}
 
-  // Find the service by ID
-  const service = services.find(s => s.id === id);
+export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  const { data: service } = await supabase
+    .from("services")
+    .select("*")
+    .eq("id", id)
+    .single();
 
-  if (loading) {
-    return <div className="text-center py-20">Loading...</div>;
-  }
-
-  if (!service) {
-    return <div className="text-center py-20">Service not found.</div>;
-  }
-
+  if (!service) return <div>Service not found.</div>;
   return (
     <div className="container mx-auto py-8">
       <ServiceDetail service={service} />

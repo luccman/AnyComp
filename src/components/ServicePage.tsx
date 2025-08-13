@@ -10,7 +10,7 @@ import { useState } from 'react';
 const priceOptions = ['None', 'Lowest', 'Highest'];
 const sortOptions = ['None', 'Rating', 'Newest', 'Popular'];
 
-export default function ServicePage({ searchResults }: { searchResults?: any[] }) {
+export default function ServicePage() {
   const {
     services,
     currentPage,
@@ -35,7 +35,7 @@ export default function ServicePage({ searchResults }: { searchResults?: any[] }
   }
   // If 'None', do not sort by sort option
 
-  const displayedServices = searchResults ?? sortedServices;
+  const displayedServices = sortedServices;
 
   return (
     <div className="min-h-screen flex flex-col">

@@ -50,7 +50,7 @@ const ServiceCard = memo(function ServiceCard({ service }: Props) {
         >
           <motion.img
             layoutId={`service-img-tag-${service.id}`}
-            src={service.image}
+            src={service.image_main_url}
             alt={service.title}
             className="w-full h-full object-cover rounded-xl"
             style={{ zIndex: 101 }}
@@ -63,13 +63,13 @@ const ServiceCard = memo(function ServiceCard({ service }: Props) {
         <div className="py-4 px-0">
           <div className="flex items-center gap-2 mb-2">
             <img
-              src={service.secretary.avatar}
-              alt={service.secretary.name}
+              src={service.secretary_avatar_url}
+              alt={service.secretary_name}
               width={32}
               height={32}
               className="w-8 h-8 rounded-full object-cover bg-neutral-200"
             />
-            <span className="font-semibold text-neutral-900 truncate">{service.secretary.name}</span>
+            <span className="font-semibold text-neutral-900 truncate">{service.secretary_name}</span>
             <span className="ml-auto text-xs text-neutral-500">{service.rating.toFixed(1)}★</span>
           </div>
           <h2 className="font-bold text-neutral-900 text-sm line-clamp-2">{service.title}</h2>

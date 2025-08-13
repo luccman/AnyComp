@@ -45,43 +45,33 @@ export function usePagedServices() {
       title: item.title,
       subtitle: item.subtitle,
       description: item.description,
-      company: item.company ?? '',
-      image: item.image_main_url,
-      price: item.price,
+      price: Number(item.price),
       duration_days: Number(item.duration_days),
       rating: Number(item.rating),
       review_count: Number(item.review_count),
       location: item.location ?? '',
-      offerings: [
-        item.offering_company_secretary_subscription && "Company Secretary Subscription",
-        item.offering_bank_account_opening && "Opening of a Bank Account",
-        item.offering_priority_filing && "Priority Filling",
-        item.offering_registered_office && "Registered Office Address Use",
-        item.offering_compliance_calendar && "Compliance Calendar Setup",
-        item.offering_first_share_cert && "First Share Certificate Issued Free",
-        item.offering_ctc_delivery && "CTC Delivery & Courier Handling",
-        item.offering_chat_support && "Chat Support",
-      ].filter(Boolean) as string[],
-      benefits: [
-        "Manage your company from one central dashboard",
-        "Securely store corporate Files & Documents",
-        "Digitally sign files requested by your Company Secretary",
-        "Get SSM Certified Digital and Printed copies"
-      ],
-      secretary: {
-        name: item.secretary_name,
-        certifications: item.certifications
-          ? JSON.parse(item.certifications.replace(/'/g, '"'))
-          : [],
-        avatar: item.secretary_avatar_url,
-        firm: item.firm_name,
-        verified: !!item.secretary_verified
-      },
+
+      secretary_name: item.secretary_name,
+      secretary_avatar_url: item.secretary_avatar_url,
+      secretary_verified: !!item.secretary_verified,
+
+      firm_name: item.firm_name,
       firm_logo_url: item.firm_logo_url,
-      firm_years_experience: Number(item.firm_years_experience),
-      image_secondary_urls: item.image_secondary_urls
-        ? JSON.parse(item.image_secondary_urls.replace(/'/g, '"'))
-        : []
+      firm_years_experience: item.firm_years_experience ? Number(item.firm_years_experience) : undefined,
+
+      certifications: item.certifications ?? '',
+
+      image_main_url: item.image_main_url,
+      image_secondary_urls: item.image_secondary_urls ?? '',
+
+      offering_company_secretary_subscription: !!item.offering_company_secretary_subscription,
+      offering_bank_account_opening: !!item.offering_bank_account_opening,
+      offering_priority_filing: !!item.offering_priority_filing,
+      offering_registered_office: !!item.offering_registered_office,
+      offering_compliance_calendar: !!item.offering_compliance_calendar,
+      offering_first_share_cert: !!item.offering_first_share_cert,
+      offering_ctc_delivery: !!item.offering_ctc_delivery,
+      offering_chat_support: !!item.offering_chat_support,
     }));
 
     dispatch(storePage({ page, services: mapped, total: count ?? mapped.length }));
