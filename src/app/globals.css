@@ -4,3 +4,6 @@
 .font-lexend {
   font-family: 'Lexend', 'Red Hat Display', sans-serif;
 }
+html {
+  scroll-behavior: smooth;
+}

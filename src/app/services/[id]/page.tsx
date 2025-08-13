@@ -1,5 +1,6 @@
 import ServiceDetail from '../../../components/ServiceDetail';
 import { createClient } from '@supabase/supabase-js';
+import RouteTransition from '../../../components/RouteTransition';
 
 export async function generateStaticParams() {
   const supabase = createClient(
@@ -27,7 +28,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   if (!service) return <div>Service not found.</div>;
   return (
     <div className="container mx-auto py-8">
-      <ServiceDetail service={service} />
+      <RouteTransition>
+        <ServiceDetail service={service} />
+      </RouteTransition>
     </div>
   );
 }

@@ -10,25 +10,17 @@ interface Props { service: Service; }
 
 const ServiceCard = memo(function ServiceCard({ service }: Props) {
   const hasBeenSeenRef = useRef<boolean>(seenMap.has(service.id));
-  const [ready, setReady] = useState(hasBeenSeenRef.current);
   const [imgLoaded, setImgLoaded] = useState(false);
 
   useEffect(() => {
     if (!hasBeenSeenRef.current) {
       hasBeenSeenRef.current = true;
       seenMap.add(service.id);
-      requestAnimationFrame(() => setReady(true));
     }
   }, []);
 
   const href = `/services/${encodeURIComponent(service.id)}`;
 
-  // Add this function to handle click
-  const handleCardClick = (e: React.MouseEvent) => {
-    // Store current scroll position in sessionStorage
-    sessionStorage.setItem('scrollPosition', window.scrollY.toString());
-    sessionStorage.setItem('clickedServiceId', service.id);
-  };
 
   const clickedServiceId = typeof window !== "undefined" ? sessionStorage.getItem('clickedServiceId') : null;
   const isActiveLayoutId = clickedServiceId === service.id;
@@ -37,25 +29,24 @@ const ServiceCard = memo(function ServiceCard({ service }: Props) {
     <Link
       href={href}
       prefetch={false}
-      className="block focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-xl"
-      onClick={handleCardClick}
+      className="block focus:outline-none focus:ring-2 focus:ring-blue-900 rounded-xl"
     >
       <motion.article
-        transition={{ duration: 0.4 }}
-        className="rounded-xl bg-white cursor-pointer transition-transform duration-300 ease-out will-change-transform hover:scale-[1.03]"
+        //  transition={{ duration: 0.4 }}
+        className="rounded-xl bg-white cursor-pointer hover:scale-[1.03] transition-all duration-300 ease-in-out "
       >
         <motion.div
           className="relative w-full h-64 bg-transparent"
-          style={{ zIndex: 100 }}
+          //style={{ zIndex: 100 }}
         >
           <motion.img
-            layoutId={`service-img-tag-${service.id}`}
+            // layoutId={`service-img-tag-${service.id}`}
             src={service.image_main_url}
             alt={service.title}
             className="w-full h-full object-cover rounded-xl"
-            style={{ zIndex: 101 }}
-            initial={{ opacity: isActiveLayoutId ? 0 : 1 }}
-            animate={{ opacity: imgLoaded || isActiveLayoutId ? 1 : 0 }}
+            //style={{ zIndex: 101 }}
+            // initial={{ opacity: isActiveLayoutId ? 1 : 1 }}
+            // animate={{ opacity: imgLoaded || isActiveLayoutId ? 1 : 0 }}
             transition={{ duration: isActiveLayoutId ? 0 : 0.7 }}
             onLoad={() => setImgLoaded(true)}
           />
@@ -81,4 +72,4 @@ const ServiceCard = memo(function ServiceCard({ service }: Props) {
   );
 }, (prev, next) => prev.service === next.service);
 
-export default ServiceCard;
+export default React.memo(ServiceCard);

@@ -19,15 +19,7 @@ interface Props {
   service: Service;
 }
 
-const FADE_DURATION = 1.3;
-const TITLE_DELAY = 0.1;
-const SECONDARY_IMG_BASE_DELAY = 0.6;
-const OFFERINGS_DELAY = 0.3;
-const DESCRIPTION_DELAY = 0.3;
-const SECRETARY_DELAY = 0.4;
-const FIRM_DELAY = 0.5;
-const CERTIFICATIONS_DELAY = 0.6;
-const RIGHT_PANEL_DELAY = 0.2;
+
 
 const offeringDetails = [
   {
@@ -125,28 +117,26 @@ export default function ServiceDetail({ service }: Props) {
   ];
 
   // Add this effect to handle scroll restoration
-  useEffect(() => {
-    const clickedServiceId = sessionStorage.getItem('clickedServiceId');
+  // useEffect(() => {
+  //   const clickedServiceId = sessionStorage.getItem('clickedServiceId');
 
-    // Only apply special handling if this is the service that was clicked
-    if (clickedServiceId === service.id) {
-      // Temporarily scroll to where user was when they clicked
-      const savedPosition = sessionStorage.getItem('scrollPosition');
-      if (savedPosition) {
-        window.scrollTo(0, parseInt(savedPosition));
-
-        // After transition completes, scroll to top (if desired)
-        // This timeout should match your transition duration
-        setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 500);
-      }
-
-      // Clear storage
-      sessionStorage.removeItem('scrollPosition');
-      sessionStorage.removeItem('clickedServiceId');
-    }
-  }, [service.id]);
+  //   // Only apply special handling if this is the service that was clicked
+  //   if (clickedServiceId === service.id) {
+  //     // Temporarily scroll to where user was when they clicked
+  //     const savedPosition = sessionStorage.getItem('scrollPosition');
+  //     if (savedPosition) {
+  //       window.scrollTo(0, parseInt(savedPosition));
+  //       // After transition completes, scroll to top (if desired)
+  //       // This timeout should match your transition duration
+  //       setTimeout(() => {
+  //         window.scrollTo({ top: 0, behavior: 'smooth' });
+  //       }, 500);
+  //     }
+  //     // Clear storage
+  //     sessionStorage.removeItem('scrollPosition');
+  //     sessionStorage.removeItem('clickedServiceId');
+  //   }
+  // }, [service.id]);
 
   const handleMainImageError = () => setMainImageError(true);
   const handleSecondaryImageError = (index: number) => {
@@ -162,14 +152,11 @@ export default function ServiceDetail({ service }: Props) {
       {/* Left Side */}
       <motion.div className="flex-1">
         {/* Title */}
-        <motion.h2
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: FADE_DURATION, delay: TITLE_DELAY }}
+        <h2
           className="text-4xl font-medium text-[#222222] mb-5"
         >
           {service.title}
-        </motion.h2>
+        </h2>
         <div className="flex gap-6 mb-8">
           {/* Main image: big square */}
           <motion.div
@@ -179,12 +166,12 @@ export default function ServiceDetail({ service }: Props) {
             onLayoutAnimationComplete={() => setIsAnimating(false)}
           >
             <motion.img
-              layoutId={`service-img-tag-${service.id}`}
+              // layoutId={`service-img-tag-${service.id}`}
               src={service.image_main_url}
               alt={service.title}
               className="w-full h-full rounded-lg object-cover"
               style={{ zIndex: isAnimating ? 101 : 'auto' }}
-              transition={{ type: 'tween', duration: 0.7, ease: 'easeInOut' }}
+              transition={{  duration: 0.7, ease: 'easeInOut' }}
               onError={handleMainImageError}
             />
           </motion.div>
@@ -192,14 +179,11 @@ export default function ServiceDetail({ service }: Props) {
           <div className="flex flex-col gap-4 justify-between h-[400px]">
             {secondaryImages.slice(0, 2).map((url: string, idx: number) => (
               !secondaryImageErrors[idx] && (
-                <motion.img
+                <img
                   key={idx}
                   src={url}
                   alt={`secondary-${idx}`}
                   className="rounded-lg w-100 h-48 object-cover"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: FADE_DURATION, delay: SECONDARY_IMG_BASE_DELAY + idx * 0.1 }}
                   onError={() => handleSecondaryImageError(idx)}
                 />
               )
@@ -207,35 +191,21 @@ export default function ServiceDetail({ service }: Props) {
           </div>
         </div>
         {/* Description */}
-        <motion.p
+        <p
           className="text-2xl mb-4 font-semibold text-[#222222]"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: FADE_DURATION, delay: DESCRIPTION_DELAY }}
         >
           Description
-        </motion.p>
-        <motion.p
-          className="text-gray-600 mb-6 text-sm"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: FADE_DURATION, delay: DESCRIPTION_DELAY }}
-        >
-          {service.description}
-        </motion.p>
+        </p>
+        <p className="text-gray-600 mb-6 text-sm">
+          {"From idea to SSM-approved - we register your company with ease. No paperwork hassle, just fast, compliant peace of mind guaranteed. Your trusted Company Secretary in Malaysia, ready to serve, Start your business strong-with expert care you deserve."}
+        </p>
         {/* Animated gray line above Additional Offerings */}
-        <motion.hr
-          initial={{ opacity: 0, scaleX: 0.8 }}
-          animate={{ opacity: 1, scaleX: 1 }}
-          transition={{ duration: 0.7, delay: OFFERINGS_DELAY }}
+        <hr
           className="w-full border-t-2 border-gray-300 my-8 rounded"
         />
         {/* Additional Offerings */}
-        <motion.div
+        <div
           className="mb-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: FADE_DURATION, delay: OFFERINGS_DELAY }}
         >
           <h3 className="font-semibold text-[#222222] mb-4 text-2xl pt-4">Additional Offerings</h3>
           <div className="grid  md:grid-cols-2 gap-5 text-gray-700 pb-5">
@@ -254,21 +224,13 @@ export default function ServiceDetail({ service }: Props) {
               );
             })}
           </div>
-        </motion.div>
+        </div>
         {/* Animated gray line above Company Secretary section */}
-        <motion.hr
-          initial={{ opacity: 0, scaleX: 0.8 }}
-          animate={{ opacity: 1, scaleX: 1 }}
-          transition={{ duration: 0.7, delay: SECRETARY_DELAY }}
+        <hr
           className="w-full border-t-2 border-gray-300 my-8 rounded"
         />
         {/* Company Secretary Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: FADE_DURATION, delay: SECRETARY_DELAY }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
           {/* Left: Secretary profile and info */}
           <div>
             <h3 className="font-semibold text-[#222222] mb-3 text-2xl">Company Secretary</h3>
@@ -344,13 +306,13 @@ export default function ServiceDetail({ service }: Props) {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </motion.div>
       {/* Right Side */}
       <motion.div
         initial={{ opacity: 0, x: 40 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: RIGHT_PANEL_DELAY, duration: FADE_DURATION }}
+        transition={{ delay: 0.3, duration: 1, ease: 'easeInOut' }}
         className="w-full lg:w-140 bg-white rounded-lg shadow-2xl p-10 h-fit"
       >
         <div className="text-3xl font-small text-[#222222] mb-2 pt-1">RM {service.price}</div>

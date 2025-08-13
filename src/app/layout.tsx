@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Providers } from '@/store/Providers';
 import NavBar from '../components/NavBar';
 import RouteTransitionProvider from './RouteTransitionProvider';
+import RouteTransition from '../components/RouteTransition';
 
 export const metadata: Metadata = {
   title: 'ANYCOMP',
@@ -20,9 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-lexend antialiased">
         <Providers>
           <NavBar />
-          <RouteTransitionProvider>
             {children}
-          </RouteTransitionProvider>
         </Providers>
       </body>
     </html>
