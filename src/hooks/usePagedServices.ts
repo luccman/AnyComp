@@ -25,7 +25,7 @@ export function usePagedServices() {
   const { currentPage, pageSize, pageCount, total, loading } = useAppSelector(selectPaginationMeta);
 
   const fetchPage = useCallback(async (page: number) => {
-    if (servicesState.pages[page]) return; // cached
+    if (servicesState.pages[page]) return; // SSR or client cache
     dispatch(fetchStart());
     const from = page * pageSize;
     const to = from + pageSize - 1;

@@ -15,7 +15,7 @@ const RouteTransition: React.FC<RouteTransitionProps> = ({ children }) => {
     setIsVisible(false);
     const timer = setTimeout(() => {
       setIsVisible(true);
-    }, 300); 
+    }, 200); 
     return () => clearTimeout(timer);
   }, [pathname]);
 
@@ -23,7 +23,7 @@ const RouteTransition: React.FC<RouteTransitionProps> = ({ children }) => {
     <div
       style={{
         opacity: isVisible ? 1 : 0,
-        transition: 'opacity 0.5s ease-in-out',
+        transition: 'opacity 0.3s ease-in-out',
       }}
     >
       {children}

@@ -51,11 +51,17 @@ export const servicesSlice = createSlice({
       state.total = null;
       state.loading = false;
       state.error = undefined;
-    }
+    },
+    setServicesPage(
+      state,
+      action: PayloadAction<{ page: number; services: Service[] }>
+    ) {
+      state.pages[action.payload.page] = action.payload.services;
+    },
   }
 });
 
-export const { fetchStart, fetchFail, storePage, setCurrentPage, resetServices } = servicesSlice.actions;
+export const { fetchStart, fetchFail, storePage, setCurrentPage, resetServices, setServicesPage } = servicesSlice.actions;
 export default servicesSlice.reducer;
 
 // Selectors

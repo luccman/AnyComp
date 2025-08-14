@@ -14,6 +14,7 @@ import CertificateIcon from '@mui/icons-material/WorkspacePremium';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import HeadsetMicIcon from '@mui/icons-material/HeadsetMic';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import Image from 'next/image';
 
 interface Props {
   service: Service;
@@ -179,11 +180,13 @@ export default function ServiceDetail({ service }: Props) {
           <div className="flex flex-col gap-4 justify-between h-[400px]">
             {secondaryImages.slice(0, 2).map((url: string, idx: number) => (
               !secondaryImageErrors[idx] && (
-                <img
+                <Image
+                  width={100}
+                  height={48}
                   key={idx}
                   src={url}
                   alt={`secondary-${idx}`}
-                  className="rounded-lg w-100 h-48 object-cover"
+                  className="w-100 h-48 rounded-lg  object-cover"
                   onError={() => handleSecondaryImageError(idx)}
                 />
               )
@@ -235,10 +238,12 @@ export default function ServiceDetail({ service }: Props) {
           <div>
             <h3 className="font-semibold text-[#222222] mb-3 text-2xl">Company Secretary</h3>
             <div className="flex items-center gap-3 mb-2">
-              <img
+              <Image
+                width={14}
+                height={14} 
                 src={service.secretary_avatar_url}
                 alt={service.secretary_name}
-                className="w-14 h-14 rounded-full"
+                className="rounded-full"
               />
               <div>
                 <div className="text-lg font-semibold text-[#222222] flex items-center gap-2">
@@ -270,10 +275,11 @@ export default function ServiceDetail({ service }: Props) {
             <div className="mb-4">
               <strong className="text-[#222222] text-lg">Firm</strong>
               <div className="flex items-center gap-2 mt-2">
-                <img
-                  src={service.firm_logo_url}
+                <Image
+                  width={8}
+                  height={8}
+                  src={service.firm_logo_url ?? "/pics/default-firm-logo.png"}
                   alt={service.firm_name}
-                  className="w-8 h-8"
                 />
                 <div>
                   <div className="text-gray-800 font-semibold">{service.firm_name}</div>
@@ -294,10 +300,12 @@ export default function ServiceDetail({ service }: Props) {
                   return (
                     <span key={idx} className="inline-block flex items-center gap-3">
                       {logoSrc && (
-                        <img
+                        <Image
+                          width={30}
+                          height={17}
                           src={logoSrc}
                           alt={cert}
-                          className="w-30 h-17 object-contain"
+                          className="object-contain"
                         />
                       )}
                     </span>

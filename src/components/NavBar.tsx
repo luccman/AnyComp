@@ -3,9 +3,10 @@ import SearchBar from './SearchBar';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
+
 export default function NavBar() {
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 flex items-center justify-between px-70 py-7 shadow-sm">
+    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 flex items-center justify-between px-85 py-7 shadow-sm">
       <div className="flex items-center gap-7">
         <Link href="/">
           <span className="mr-3 font-bold text-xl tracking-tight">ANYCOMP</span>
